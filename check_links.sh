@@ -2,9 +2,35 @@
 
 set -e
 
-image="wjdp/htmltest"
+toplevel="$(git rev-parse --show-toplevel)"
 
-cd "$(git rev-parse --show-toplevel)"
+echo "= Checking links in Markdown files ="
+cd "$toplevel"
+cd content
+
+supported_translations=(de)
+exceptional_links=("/privacy-policy/" "/refund-policy/" "/terms/")
+
+for lang in "${supported_translations[@]}"; do
+    files=$(find . -type f -name "*.$lang.md")
+    links_to_english_pages=$(grep -rnP "\[[^\]]+\]\((?!http|mailto|/$lang|#)[^)]+\)" $files)
+    for link in "${exceptional_links[@]}"; do
+        links_to_english_pages=$(echo "$links_to_english_pages" | grep -v "$link")
+    done
+    if [[ -n "$links_to_english_pages" ]]; then
+        count=$(echo "$links_to_english_pages" | wc -l)
+        echo "Found $count links from $lang-pages to English pages:"
+        echo "$links_to_english_pages"
+        exit 1
+    else
+        echo "Found no links from $lang-pages to English pages."
+    fi
+done
+
+echo "= Checking links in Hugo site ="
+cd "$toplevel"
+
+image="wjdp/htmltest"
 
 rm -f $(find ./public -type f -name "*.html")
 hugo
