@@ -6,6 +6,7 @@ image="wjdp/htmltest"
 
 cd "$(git rev-parse --show-toplevel)"
 
+rm -f $(find ./public -type f -name "*.html")
 hugo
 cp ./scripts_hugo/.htmltest.yml ./public/
 
