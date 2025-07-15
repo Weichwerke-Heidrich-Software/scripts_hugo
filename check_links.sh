@@ -41,4 +41,9 @@ if [ -z "$image_exists" ]; then
     docker pull $image
 fi
 
-docker run --volume $(pwd)/public:/test --rm $image --conf /test/.htmltest.yml
+docker run \
+    --network=host \
+    --volume $(pwd)/public:/test \
+    --rm \
+    $image \
+    --conf /test/.htmltest.yml
