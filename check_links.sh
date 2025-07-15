@@ -13,9 +13,9 @@ exceptional_links=("/privacy-policy/" "/refund-policy/" "/terms/")
 
 for lang in "${supported_translations[@]}"; do
     files=$(find . -type f -name "*.$lang.md")
-    links_to_english_pages=$(grep -rnP "\[[^\]]+\]\((?!http|mailto|/$lang|#)[^)]+\)" $files)
+    links_to_english_pages=$(grep -rnP "\[[^\]]+\]\((?!http|mailto|/$lang|#)[^)]+\)" $files || true)
     for link in "${exceptional_links[@]}"; do
-        links_to_english_pages=$(echo "$links_to_english_pages" | grep -v "$link")
+        links_to_english_pages=$(echo "$links_to_english_pages" | grep -v "$link" || true)
     done
     if [[ -n "$links_to_english_pages" ]]; then
         count=$(echo "$links_to_english_pages" | wc -l)
