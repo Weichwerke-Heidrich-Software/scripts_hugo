@@ -3,6 +3,9 @@
 set -e
 
 cd "$(git rev-parse --show-toplevel)"
+
+echo "= Checking for missing descriptions ="
+
 cd content
 
 suggested_english_prompt="""
