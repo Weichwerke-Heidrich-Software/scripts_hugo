@@ -4,7 +4,29 @@ set -e
 
 toplevel="$(git rev-parse --show-toplevel)"
 
-echo "= Checking links in Markdown files ="
+echo "= Checking that links in Markdown files point to directory ="
+cd "$toplevel"
+cd content
+
+echo "= Checking that links in Markdown files point to directory ="
+md_files=$(find . -type f -name "*.md")
+links_to_index_html=()
+for file in $md_files; do
+    if grep -qP "\[[^\]]+\]\([^)]+index\.html[^\)]*\)" "$file"; then
+        links_to_index_html+=("$file")
+    fi
+done
+if [[ ${#links_to_index_html[@]} -gt 0 ]]; then
+    echo "Found links to index.html in the following files:"
+    for file in "${links_to_index_html[@]}"; do
+        echo "$file"
+    done
+    exit 1
+else
+    echo "No links to index.html found in Markdown files."
+fi
+
+echo "= Checking that links in translated Markdown files point to translated content ="
 cd "$toplevel"
 cd content
 
@@ -27,7 +49,7 @@ for lang in "${supported_translations[@]}"; do
     fi
 done
 
-echo "= Checking links in Hugo site ="
+echo "= Running HTML test ="
 cd "$toplevel"
 
 image="wjdp/htmltest"
