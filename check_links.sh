@@ -32,13 +32,26 @@ cd "$toplevel"
 
 image="wjdp/htmltest"
 
+image_exists=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep -w "$image" || true)
+if [ -z "$image_exists" ]; then
+    docker pull $image
+fi
+
 rm -f $(find ./public -type f -name "*.html")
 hugo
 cp ./scripts_hugo/.htmltest.yml ./public/
 
-image_exists=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep -w "$image" || true)
-if [ -z "$image_exists" ]; then
-    docker pull $image
+todays_links=$(./scripts_hugo/todays_links.sh)
+if [[ -n "$todays_links" ]]; then
+    echo "Attention, ignoring links from pages released today:"
+    echo
+    echo "$todays_links"
+    echo
+    echo "Please check manually that these links are correct."
+
+    echo "" >> ./public/.htmltest.yml
+    echo "IgnoreURLs:" >> ./public/.htmltest.yml
+    echo "$todays_links" | sed 's/^/  - /' >> ./public/.htmltest.yml
 fi
 
 docker run \
