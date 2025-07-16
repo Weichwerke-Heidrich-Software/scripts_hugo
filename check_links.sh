@@ -8,7 +8,6 @@ echo "= Checking that links in Markdown files point to directory ="
 cd "$toplevel"
 cd content
 
-echo "= Checking that links in Markdown files point to directory ="
 md_files=$(find . -type f -name "*.md")
 links_to_index_html=()
 for file in $md_files; do
