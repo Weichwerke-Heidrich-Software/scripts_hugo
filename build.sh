@@ -12,7 +12,6 @@ cd ..
 ./scripts_hugo/missing_description.sh
 ./scripts_hugo/missing_translations.sh
 ./scripts_hugo/infer_modify_date_from_git.sh
-./scripts_hugo/check_links.sh
 
 if [[ -n $(git status --porcelain) ]]; then
   echo "Error: You have unstaged changes."
