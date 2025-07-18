@@ -30,7 +30,7 @@ cd "$toplevel"
 cd content
 
 supported_translations=(de)
-exceptional_links=("/privacy-policy/" "/refund-policy/" "/terms/")
+exceptional_links=("/images/" "/privacy-policy/" "/refund-policy/" "/terms/")
 
 for lang in "${supported_translations[@]}"; do
     files=$(find . -type f -name "*.$lang.md")
