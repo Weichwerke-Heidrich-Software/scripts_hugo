@@ -59,7 +59,7 @@ if [ -z "$image_exists" ]; then
 fi
 
 rm -f $(find ./public -type f -name "*.html")
-hugo
+hugo --buildFuture
 cp ./scripts_hugo/.htmltest.yml ./public/
 
 docker run \
