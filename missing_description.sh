@@ -21,6 +21,9 @@ for file in $(find . -name "*.md"); do
     if grep -q "^draft\s*[:=]\s*true" $file; then
         continue
     fi
+    if grep -q "^robots\s*[:=]\s*noindex" $file; then
+        continue
+    fi
     if ! grep -q "^description\s*[:=]" $file; then
         echo "Missing description: $file"
         count=$((count+1))
