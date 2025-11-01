@@ -22,4 +22,4 @@ fi
 sudo rm -rf ./public/tmp/ # Created by htmltest from within a docker container
 rm -rf ./public
 
-hugo --minify --gc --cleanDestinationDir
+hugo --minify --gc --cleanDestinationDir --buildFuture
