@@ -7,4 +7,5 @@ HTTPHeaders:
   Connection: "keep-alive"
 IgnoreURLs:
   - "https://cwe.mitre.org/" # Connection sporadically reset by peer
-  - "https://archiv.ub.uni-heidelberg.de/volltextserver/30023/" # Sporadically stops responding
+  - "https://archiv.ub.uni-heidelberg.de/" # Sporadically stops responding
+  - "https://www.bsi.bund.de/" # Always times out from CI environment
