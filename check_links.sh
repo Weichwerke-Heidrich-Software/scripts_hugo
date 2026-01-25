@@ -9,20 +9,41 @@ cd "$toplevel"
 cd content
 
 md_files=$(find . -type f -name "*.md")
+index_regex='\[[^\]]+\]\([^)]+index\.html[^\)]*\)'
 links_to_index_html=()
+# Match links (not starting with http, mailto or a #) whose path part does not end with a slash.
+# Allow URLs where the path ends with a slash but is followed by a query or fragment (/? or /#).
+no_slash_regex='\[[^\]]+\]\((?!http|mailto|#)[^?#\)]*(?<!/|\.svg|\.png|\.jpg|\.jpeg|\.gif)(?:[?#][^)]*)?\)'
+links_not_ending_with_slash=()
 for file in $md_files; do
-    if grep -qP "\[[^\]]+\]\([^)]+index\.html[^\)]*\)" "$file"; then
+    if grep -qP "$index_regex" "$file"; then
         links_to_index_html+=("$file")
+    fi
+    if grep -qP "$no_slash_regex" "$file"; then
+        links_not_ending_with_slash+=("$file")
     fi
 done
 if [[ ${#links_to_index_html[@]} -gt 0 ]]; then
     echo "Found links to index.html in the following files:"
     for file in "${links_to_index_html[@]}"; do
-        echo "$file"
+        echo
+        echo $file:
+        grep -P "$index_regex" "$file"
     done
     exit 1
 else
     echo "No links to index.html found in Markdown files."
+fi
+if [[ ${#links_not_ending_with_slash[@]} -gt 0 ]]; then
+    echo "Found links not ending with a slash in the following files:"
+    for file in "${links_not_ending_with_slash[@]}"; do
+        echo
+        echo $file:
+        grep -P "$no_slash_regex" "$file"
+    done
+    exit 1
+else
+    echo "All links end with a slash as expected."
 fi
 
 echo "= Checking that links in translated Markdown files point to translated content ="
